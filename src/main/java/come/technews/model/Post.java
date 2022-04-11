@@ -14,6 +14,10 @@ import java.io.Serializable;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "post")
 public class Post implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
@@ -34,6 +38,9 @@ public class Post implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "updated_at")
 	private Date updatedAt = new Date();
+	
+	// need to use FetchType.LAZY to resolve multiple bags exception
+	@OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Comment> comments;
 	
 	public Post() {

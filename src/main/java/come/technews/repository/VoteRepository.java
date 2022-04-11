@@ -1,5 +1,13 @@
 package come.technews.repository;
 
-public interface VoteRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import come.technews.model.Vote;
+
+public interface VoteRepository extends JpaRepository<Vote, Integer> {
+	
+	@Query("SELECT count(*) FROM Vote v where v.postId = :id")
+	int countVotesByPostId(@Param("id") Integer id);
 }

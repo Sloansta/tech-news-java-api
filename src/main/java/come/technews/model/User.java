@@ -1,11 +1,11 @@
 package come.technews.model;
 
-import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -15,26 +15,29 @@ public class User implements Serializable {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
 	//private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	private String username;
+	
+	private String userName;
 	@Column(unique = true)
 	private String email;
 	private String password;
 	@Transient
 	boolean loggedIn;
 	
+
 	@OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Post> posts;
-	
-	// need to use FetchType.Lazy to resolve multiple bags exception
+	// Need to use FetchType.LAZY to resolve multiple bags exception
 	@OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Vote> votes;
-	
-	// same as above, we need to use FetchType.LAZY
-	
+	// Need to use FetchType.LAZY to resolve multiple bags exception
 	@OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Comment> comments;
 	
@@ -42,9 +45,9 @@ public class User implements Serializable {
 		
 	}
 	
-	public User(Integer id, String username, String email, String password) {
+	public User(Integer id, String userName, String email, String password) {
 		this.id = id;
-		this.username = username;
+		this.userName = userName;
 		this.email = email;
 		this.password = password;
 	}
@@ -57,12 +60,12 @@ public class User implements Serializable {
 		this.id = id;
 	}
 	
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return userName;
 	}
 	
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUsername(String userName) {
+		this.userName = userName;
 	}
 	
 	public String getEmail() {
@@ -121,7 +124,7 @@ public class User implements Serializable {
 		
 		return isLoggedIn() == user.isLoggedIn() &&
 				Objects.equals(getId(), user.getId()) &&
-				Objects.equals(getUsername(), user.getUsername()) &&
+				Objects.equals(getUserName(), user.getUserName()) &&
 				Objects.equals(getEmail(), user.getEmail()) &&
 				Objects.equals(getPassword(), user.getPassword()) &&
 				Objects.equals(getPosts(), user.getPosts()) &&
@@ -131,14 +134,14 @@ public class User implements Serializable {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(getId(), getUsername(), getEmail(), getPassword(), isLoggedIn(), getPosts(), getVotes(), getComments());
+		return Objects.hash(getId(), getUserName(), getEmail(), getPassword(), isLoggedIn(), getPosts(), getVotes(), getComments());
 	}
 	
 	@Override
 	public String toString() {
 		return "User{" + 
 			   "id=" + id +
-			   ", username=" + username + '\'' + 
+			   ", username=" + userName + '\'' + 
 			   ", email=" + email + '\'' + 
 			   ", password=" + password + '\'' + 
 			   ", loggedIn=" + loggedIn + 
